@@ -2,6 +2,7 @@ package com.manish.search.search;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,5 +20,23 @@ public class DocumentStatisticsStore {
 
     public DocumentStats get(String documentId) {
         return stats.get(documentId);
+    }
+
+    public int totalDocuments() {
+        return stats.size();
+    }
+
+    public double averageDocumentLength() {
+        if(stats.isEmpty()) return 0;
+
+        int totalLength = stats.values()
+                .stream().mapToInt(DocumentStats::getLength)
+                .sum();
+
+        return (double) totalLength / stats.size();
+    }
+
+    public Collection<DocumentStats> all() {
+        return stats.values();
     }
 }

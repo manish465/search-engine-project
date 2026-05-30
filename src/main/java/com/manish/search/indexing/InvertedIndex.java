@@ -30,4 +30,8 @@ public class InvertedIndex {
     public List<Posting> getPostings(String token) {
         return index.getOrDefault(token, Collections.emptyList());
     }
+
+    public int documentFrequency(String term) {
+        return getPostings(term).size();
+    }
 }

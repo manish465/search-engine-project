@@ -1,6 +1,6 @@
 package com.manish.search.controller;
 
-import com.manish.search.search.SearchEngine;
+import com.manish.search.service.SearchEngine;
 import com.manish.search.storage.Document;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
