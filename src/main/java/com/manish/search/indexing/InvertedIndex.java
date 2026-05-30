@@ -25,6 +25,8 @@ public class InvertedIndex {
             posting = new Posting(documentId);
             postings.add(posting);
         }
+
+        posting.addPosition(position);
     }
 
     public List<Posting> getPostings(String token) {

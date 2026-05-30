@@ -1,5 +1,6 @@
-package com.manish.search.search;
+package com.manish.search.storage;
 
+import com.manish.search.model.DocumentStats;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -15,7 +16,7 @@ public class DocumentStatisticsStore {
     }
 
     public void save(DocumentStats stat) {
-        stats.put(stat.getDocumentId(), stat);
+        stats.put(stat.documentId(), stat);
     }
 
     public DocumentStats get(String documentId) {
@@ -30,13 +31,9 @@ public class DocumentStatisticsStore {
         if(stats.isEmpty()) return 0;
 
         int totalLength = stats.values()
-                .stream().mapToInt(DocumentStats::getLength)
+                .stream().mapToInt(DocumentStats::length)
                 .sum();
 
         return (double) totalLength / stats.size();
-    }
-
-    public Collection<DocumentStats> all() {
-        return stats.values();
     }
 }

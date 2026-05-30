@@ -1,4 +1,4 @@
-package com.manish.search.storage;
+package com.manish.search.model;
 
 public record Document(
         String id,

@@ -1,5 +1,6 @@
 package com.manish.search.storage;
 
+import com.manish.search.model.Document;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;

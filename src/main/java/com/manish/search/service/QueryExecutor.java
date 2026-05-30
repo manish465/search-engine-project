@@ -3,7 +3,7 @@ package com.manish.search.service;
 import com.manish.search.indexing.InvertedIndex;
 import com.manish.search.indexing.Posting;
 import com.manish.search.query.*;
-import com.manish.search.storage.Document;
+import com.manish.search.model.Document;
 import com.manish.search.storage.DocumentStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
