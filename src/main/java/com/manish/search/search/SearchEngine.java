@@ -1,25 +1,29 @@
 package com.manish.search.search;
 
+import com.manish.search.indexing.FieldType;
 import com.manish.search.indexing.InvertedIndex;
 import com.manish.search.indexing.Posting;
 import com.manish.search.indexing.Tokenizer;
 import com.manish.search.model.*;
 import com.manish.search.ranking.BM25Scorer;
+import com.manish.search.ranking.ScoreExplanation;
+import com.manish.search.ranking.SearchResult;
 import com.manish.search.storage.DocumentStatisticsStore;
 import com.manish.search.storage.DocumentStore;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SearchEngine {
     private final Tokenizer tokenizer;
     private final InvertedIndex invertedIndex;
     private final DocumentStore documentStore;
     private final DocumentStatisticsStore documentStatisticsStore;
     private final BM25Scorer bm25Scorer;
+    private final PhraseMatcher phraseMatcher;
 
     public void index(Document document) {
         documentStore.save(document);
@@ -45,6 +49,8 @@ public class SearchEngine {
 
         scoreTerms(query.positiveTerms(), positiveScores, totalDocs, avgDocLength, documentExplanations);
         scoreTerms(query.negativeTerms(), negativeScores, totalDocs, avgDocLength, documentExplanations);
+        scorePhrases(query.positiveTerms(), positiveScores, documentExplanations);
+        scorePhrases(query.negativeTerms(), negativeScores, documentExplanations);
 
         Set<String> allDocs = new HashSet<>();
         allDocs.addAll(positiveScores.keySet());
@@ -115,5 +121,66 @@ public class SearchEngine {
         }
 
         return tokens.size();
+    }
+
+    private void scorePhrases(
+            List<String> phrases,
+            Map<String, Double> scores,
+            Map<String, List<ScoreExplanation>> documentExplanations
+    ) {
+        final double PHRASE_BOOST = 10.0;
+
+        for(String phrase : phrases) {
+            List<String> terms = tokenizer.tokenize(phrase);
+
+            if(terms.isEmpty()) continue;
+
+            Map<String, List<Posting>> postingsByDoc = new HashMap<>();
+            boolean firstTerm = true;
+
+            for (String term : terms) {
+                List<Posting> postings = invertedIndex.getPostings(term);
+
+                if(firstTerm) {
+                    for (Posting posting : postings) {
+                        postingsByDoc.put(posting.getDocumentId(), new ArrayList<>(List.of(posting)));
+                    }
+
+                    firstTerm = false;
+                    continue;
+                }
+
+                postingsByDoc.entrySet()
+                        .removeIf(entry -> {
+                            Posting matchingPosting = postings
+                                    .stream()
+                                    .filter(p -> p.getDocumentId().equals(entry.getKey()))
+                                    .findFirst()
+                                    .orElse(null);
+
+                            if(matchingPosting == null) return true;
+
+                            entry.getValue().add(matchingPosting);
+                            return false;
+                        });
+            }
+
+            for(var entry : postingsByDoc.entrySet()) {
+                if(phraseMatcher.matches(entry.getValue())) {
+                    scores.merge(entry.getKey(), PHRASE_BOOST, Double::sum);
+                    documentExplanations
+                            .computeIfAbsent(
+                                    entry.getKey(),
+                                    d -> new ArrayList<>())
+                            .add(new ScoreExplanation(
+                                    "\"" + phrase + "\"",
+                                    "PHRASE",
+                                    1.0,
+                                    PHRASE_BOOST,
+                                    PHRASE_BOOST
+                            ));
+                }
+            }
+        }
     }
 }

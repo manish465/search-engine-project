@@ -1,6 +1,4 @@
-package com.manish.search.model;
-
-import com.manish.search.search.ScoreExplanation;
+package com.manish.search.ranking;
 
 import java.util.List;
 

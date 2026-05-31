@@ -1,4 +1,4 @@
-package com.manish.search.controller;
+package com.manish.search.api;
 
 import com.manish.search.search.SearchEngine;
 import com.manish.search.model.Document;

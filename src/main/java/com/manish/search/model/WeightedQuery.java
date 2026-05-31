@@ -4,6 +4,8 @@ import java.util.List;
 
 public record WeightedQuery(
         List<String> positiveTerms,
-        List<String> negativeTerms
+        List<String> negativeTerms,
+        List<String> positivePhrases,
+        List<String> negativePhrases
 ) {
 }

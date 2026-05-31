@@ -1,4 +1,4 @@
-package com.manish.search.model;
+package com.manish.search.indexing;
 
 public enum FieldType {
     TITLE,

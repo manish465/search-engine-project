@@ -1,9 +1,9 @@
-package com.manish.search.controller;
+package com.manish.search.api;
 
 import com.manish.search.model.WeightedQuery;
+import com.manish.search.search.QueryParser;
 import com.manish.search.search.SearchEngine;
-import com.manish.search.model.SearchResult;
-import com.manish.search.search.WeightedQueryParser;
+import com.manish.search.ranking.SearchResult;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchController {
     private final SearchEngine searchEngine;
-    private final WeightedQueryParser parser;
+    private final QueryParser parser;
 
     @GetMapping("/search")
     public List<SearchResult> search(@RequestParam String q) {

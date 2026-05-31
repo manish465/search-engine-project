@@ -1,6 +1,6 @@
 package com.manish.search.search;
 
-import com.manish.search.model.FieldType;
+import com.manish.search.indexing.FieldType;
 
 import java.util.Map;
 

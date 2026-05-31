@@ -1,6 +1,5 @@
 package com.manish.search.indexing;
 
-import com.manish.search.model.FieldType;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

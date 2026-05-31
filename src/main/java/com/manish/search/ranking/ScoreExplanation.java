@@ -1,4 +1,4 @@
-package com.manish.search.search;
+package com.manish.search.ranking;
 
 public record ScoreExplanation(
         String term,

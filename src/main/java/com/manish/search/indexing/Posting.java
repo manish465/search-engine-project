@@ -1,6 +1,5 @@
 package com.manish.search.indexing;
 
-import com.manish.search.model.FieldType;
 import lombok.Getter;
 
 import java.util.ArrayList;
