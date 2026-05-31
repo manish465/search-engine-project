@@ -1,5 +1,6 @@
 package com.manish.search.indexing;
 
+import com.manish.search.model.FieldType;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -13,16 +14,16 @@ public class InvertedIndex {
         index = new ConcurrentHashMap<>();
     }
 
-    public void addToken(String token, String documentId, int position) {
+    public void addToken(String token, String documentId, FieldType field, int position) {
         List<Posting> postings = index.computeIfAbsent(token, k -> new ArrayList<>());
 
         Posting posting = postings.stream()
-                .filter(p -> p.getDocumentId().equals(documentId))
+                .filter(p -> p.getDocumentId().equals(documentId) && p.getField() == field)
                 .findFirst()
                 .orElse(null);
 
         if(posting == null) {
-            posting = new Posting(documentId);
+            posting = new Posting(documentId, field);
             postings.add(posting);
         }
 
