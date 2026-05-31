@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/documents")
 @AllArgsConstructor
@@ -18,5 +20,13 @@ public class DocumentController {
     public String addDocument(@RequestBody Document document) {
         searchEngine.index(document);
         return "Indexed";
+    }
+
+    @PostMapping("/all")
+    public String addAllDocument(@RequestBody List<Document> documents) {
+        for(Document document : documents) {
+            searchEngine.index(document);
+        }
+        return "Indexed All";
     }
 }

@@ -1,5 +1,6 @@
 package com.manish.search.search;
 
+import com.manish.search.fuzzy.FuzzyTermFinder;
 import com.manish.search.indexing.FieldType;
 import com.manish.search.indexing.InvertedIndex;
 import com.manish.search.indexing.Posting;
@@ -24,6 +25,7 @@ public class SearchEngine {
     private final DocumentStatisticsStore documentStatisticsStore;
     private final BM25Scorer bm25Scorer;
     private final PhraseMatcher phraseMatcher;
+    private final FuzzyTermFinder fuzzyTermFinder;
 
     public void index(Document document) {
         documentStore.save(document);
@@ -86,29 +88,42 @@ public class SearchEngine {
             double avgDocLength,
             Map<String, List<ScoreExplanation>> documentExplanations
     ) {
+        for(String originalTerm : terms) {
+            Set<String> searchTerms = new LinkedHashSet<>();
 
-        for(String term : terms) {
-            int df = invertedIndex.documentFrequency(term);
-            List<Posting> postings = invertedIndex.getPostings(term);
+            searchTerms.add(originalTerm);
+            searchTerms.addAll(
+                    fuzzyTermFinder
+                            .findSimilarTerms(originalTerm)
+                            .stream()
+                            .filter(term -> !term.equals(originalTerm))
+                            .toList()
+            );
 
-            for(Posting posting : postings) {
-                String documentId = posting.getDocumentId();
-                DocumentStats stats = documentStatisticsStore.get(documentId);
+            for(String searchTerm : searchTerms) {
+                int df = invertedIndex.documentFrequency(searchTerm);
+                List<Posting> postings = invertedIndex.getPostings(searchTerm);
+                double fuzzyMultiplier = searchTerm.equals(originalTerm) ? 1.0 : 0.5;
 
-                if(stats == null) continue;
+                for(Posting posting : postings) {
+                    String documentId = posting.getDocumentId();
+                    DocumentStats stats = documentStatisticsStore.get(documentId);
 
-                int tf = posting.getTermFrequency();
-                int docLength = stats.length();
+                    if(stats == null) continue;
 
-                double bm25corer = bm25Scorer.score(tf, df, totalDocs, docLength, avgDocLength);
-                double boost = FieldBoosts.BOOSTS.getOrDefault(posting.getField(), 1.0);
-                double score = bm25corer * boost;
+                    int tf = posting.getTermFrequency();
+                    int docLength = stats.length();
 
-                documentExplanations
-                        .computeIfAbsent(documentId, d -> new ArrayList<>())
-                        .add(new ScoreExplanation(term, posting.getField().name(), bm25corer, boost, score));
+                    double bm25corer = bm25Scorer.score(tf, df, totalDocs, docLength, avgDocLength);
+                    double boost = FieldBoosts.BOOSTS.getOrDefault(posting.getField(), 1.0);
+                    double score = bm25corer * boost * fuzzyMultiplier;
 
-                scores.merge(documentId, score, Double::sum);
+                    documentExplanations
+                            .computeIfAbsent(documentId, d -> new ArrayList<>())
+                            .add(new ScoreExplanation(searchTerm, posting.getField().name(), bm25corer, boost, score));
+
+                    scores.merge(documentId, score, Double::sum);
+                }
             }
         }
     }

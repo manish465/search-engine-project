@@ -1,5 +1,6 @@
 package com.manish.search.indexing;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -8,12 +9,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class InvertedIndex {
     private final Map<String, List<Posting>> index;
+    @Getter
+    private final Set<String> vocabulary;
 
     public InvertedIndex() {
         index = new ConcurrentHashMap<>();
+        vocabulary = ConcurrentHashMap.newKeySet();
     }
 
     public void addToken(String token, String documentId, FieldType field, int position) {
+        vocabulary.add(token);
+
         List<Posting> postings = index.computeIfAbsent(token, k -> new ArrayList<>());
 
         Posting posting = postings.stream()
