@@ -26,4 +26,8 @@ public class DocumentStore {
     public Collection<Document> getAll() {
         return documentMapStore.values();
     }
+
+    public void remove(String documentId) {
+        documentMapStore.remove(documentId);
+    }
 }

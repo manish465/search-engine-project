@@ -36,4 +36,8 @@ public class DocumentStatisticsStore {
 
         return (double) totalLength / stats.size();
     }
+
+    public void remove(String documentId) {
+        stats.remove(documentId);
+    }
 }

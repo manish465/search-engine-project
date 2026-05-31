@@ -1,6 +1,6 @@
 package com.manish.search.fuzzy;
 
-import com.manish.search.indexing.InvertedIndex;
+import com.manish.search.indexing.CompositeIndex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class FuzzyTermFinder {
-    private final InvertedIndex index;
+    private final CompositeIndex index;
     private final LevenshteinDistanceCalculator calculator;
 
     public List<String> findSimilarTerms(String queryTerm) {

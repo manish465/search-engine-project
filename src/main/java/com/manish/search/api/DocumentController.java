@@ -3,10 +3,7 @@ package com.manish.search.api;
 import com.manish.search.search.SearchEngine;
 import com.manish.search.model.Document;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +25,11 @@ public class DocumentController {
             searchEngine.index(document);
         }
         return "Indexed All";
+    }
+
+    @DeleteMapping
+    public String deleteDocument(@RequestParam String id) {
+        searchEngine.deleteDocument(id);
+        return "Deleted Document";
     }
 }

@@ -1,84 +1,134 @@
 package com.manish.search.search;
 
 import com.manish.search.fuzzy.FuzzyTermFinder;
-import com.manish.search.indexing.FieldType;
-import com.manish.search.indexing.InvertedIndex;
-import com.manish.search.indexing.Posting;
-import com.manish.search.indexing.Tokenizer;
+import com.manish.search.indexing.*;
 import com.manish.search.model.*;
 import com.manish.search.ranking.BM25Scorer;
 import com.manish.search.ranking.ScoreExplanation;
 import com.manish.search.ranking.SearchResult;
-import com.manish.search.storage.DocumentStatisticsStore;
-import com.manish.search.storage.DocumentStore;
-import lombok.RequiredArgsConstructor;
+import com.manish.search.storage.*;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
-@RequiredArgsConstructor
 public class SearchEngine {
     private final Tokenizer tokenizer;
-    private final InvertedIndex invertedIndex;
     private final DocumentStore documentStore;
     private final DocumentStatisticsStore documentStatisticsStore;
     private final BM25Scorer bm25Scorer;
     private final PhraseMatcher phraseMatcher;
     private final FuzzyTermFinder fuzzyTermFinder;
+    private final SegmentWriter segmentWriter;
+    private final SegmentManager segmentManager;
+    private final MemoryIndex memoryIndex;
+    private final SegmentReader segmentReader;
+    private final CompositeIndex compositeIndex;
+
+    private final Counter searchCounter;
+    private final Counter indexedCounter;
+    private final Timer searchTimer;
+
+    private final List<Document> buffer = Collections.synchronizedList(new ArrayList<>());
+    private final ReentrantLock flushLock = new ReentrantLock();
+    private static final int FLUSH_THRESHOLD = 1000;
+    private final Map<String, List<String>> fuzzyCache = new ConcurrentHashMap<>();
+    private final Set<String> tombstones = ConcurrentHashMap.newKeySet();
+
+    public SearchEngine(
+            Tokenizer tokenizer,
+            DocumentStore documentStore,
+            DocumentStatisticsStore documentStatisticsStore,
+            BM25Scorer bm25Scorer,
+            PhraseMatcher phraseMatcher,
+            FuzzyTermFinder fuzzyTermFinder,
+            SegmentWriter segmentWriter,
+            SegmentManager segmentManager,
+            MeterRegistry meterRegistry,
+            MemoryIndex memoryIndex, SegmentReader segmentReader, CompositeIndex compositeIndex
+    ) {
+        this.tokenizer = tokenizer;
+        this.documentStore = documentStore;
+        this.documentStatisticsStore = documentStatisticsStore;
+        this.bm25Scorer = bm25Scorer;
+        this.phraseMatcher = phraseMatcher;
+        this.fuzzyTermFinder = fuzzyTermFinder;
+        this.segmentWriter = segmentWriter;
+        this.segmentManager = segmentManager;
+        this.memoryIndex = memoryIndex;
+        this.segmentReader = segmentReader;
+        this.compositeIndex = compositeIndex;
+
+
+        this.searchCounter = meterRegistry.counter("search.requests");
+        this.indexedCounter = meterRegistry.counter("documents.indexed");
+        this.searchTimer = meterRegistry.timer("search.latency");
+    }
 
     public void index(Document document) {
+        indexedCounter.increment();
+
         documentStore.save(document);
-
-        int totalLength = 0;
-        totalLength += indexField(document.id(), document.title(), FieldType.TITLE);
-        totalLength += indexField(document.id(), document.content(), FieldType.CONTENT);
-        if(document.tags() != null && !document.tags().isEmpty())
-            for(String tags : document.tags())
-                totalLength += indexField(document.id(), tags, FieldType.TAG);
-
-        documentStatisticsStore.save(new DocumentStats(document.id(), totalLength));
+        buffer.add(document);
+        indexDocument(document);
+        if(buffer.size() >= FLUSH_THRESHOLD) flushSegment();
     }
 
     public List<SearchResult> search(WeightedQuery query) {
-        Map<String, Double> positiveScores = new HashMap<>();
-        Map<String, Double> negativeScores = new HashMap<>();
+        Timer.Sample sample = Timer.start();
 
-        Map<String, List<ScoreExplanation>> documentExplanations = new HashMap<>();
+        try {
+            searchCounter.increment();
 
-        int totalDocs = documentStatisticsStore.totalDocuments();
-        double avgDocLength = documentStatisticsStore.averageDocumentLength();
+            Map<String, Double> positiveScores = new HashMap<>();
+            Map<String, Double> negativeScores = new HashMap<>();
 
-        scoreTerms(query.positiveTerms(), positiveScores, totalDocs, avgDocLength, documentExplanations);
-        scoreTerms(query.negativeTerms(), negativeScores, totalDocs, avgDocLength, documentExplanations);
-        scorePhrases(query.positiveTerms(), positiveScores, documentExplanations);
-        scorePhrases(query.negativeTerms(), negativeScores, documentExplanations);
+            Map<String, List<ScoreExplanation>> documentExplanations = new HashMap<>();
 
-        Set<String> allDocs = new HashSet<>();
-        allDocs.addAll(positiveScores.keySet());
-        allDocs.addAll(negativeScores.keySet());
+            int totalDocs = documentStatisticsStore.totalDocuments();
+            double avgDocLength = documentStatisticsStore.averageDocumentLength();
 
-        List<SearchResult> results = new ArrayList<>();
-        double penaltyWeight = 0.7;
+            if(avgDocLength <= 0) avgDocLength = 1;
 
-        for(String docId : allDocs) {
-            double positiveScore = positiveScores.getOrDefault(docId, 0.0);
-            double negativeScore = negativeScores.getOrDefault(docId, 0.0);
+            scoreTerms(query.positiveTerms(), positiveScores, totalDocs, avgDocLength, documentExplanations);
+            scoreTerms(query.negativeTerms(), negativeScores, totalDocs, avgDocLength, documentExplanations);
+            scorePhrases(query.positivePhrases(), positiveScores, documentExplanations);
+            scorePhrases(query.negativePhrases(), positiveScores, documentExplanations);
 
-            double finalScore = positiveScore - (negativeScore * penaltyWeight);
+            Set<String> allDocs = new HashSet<>();
+            allDocs.addAll(positiveScores.keySet());
+            allDocs.addAll(negativeScores.keySet());
 
-            results.add(new SearchResult(
-                    docId,
-                    positiveScore,
-                    negativeScore,
-                    finalScore,
-                    documentExplanations.getOrDefault(docId, List.of()))
-            );
+            List<SearchResult> results = new ArrayList<>();
+            double penaltyWeight = 0.7;
+
+            for(String docId : allDocs) {
+                double positiveScore = positiveScores.getOrDefault(docId, 0.0);
+                double negativeScore = negativeScores.getOrDefault(docId, 0.0);
+
+                double finalScore = positiveScore - (negativeScore * penaltyWeight);
+
+                results.add(new SearchResult(
+                        docId,
+                        positiveScore,
+                        negativeScore,
+                        finalScore,
+                        documentExplanations.getOrDefault(docId, List.of()))
+                );
+            }
+
+            results.sort(Comparator.comparingDouble(SearchResult::finalScore).reversed());
+
+            return results;
+
+        } finally {
+            sample.stop(searchTimer);
         }
-
-        results.sort(Comparator.comparingDouble(SearchResult::finalScore).reversed());
-
-        return results;
     }
 
     private void scoreTerms(
@@ -92,21 +142,25 @@ public class SearchEngine {
             Set<String> searchTerms = new LinkedHashSet<>();
 
             searchTerms.add(originalTerm);
-            searchTerms.addAll(
-                    fuzzyTermFinder
-                            .findSimilarTerms(originalTerm)
-                            .stream()
+
+            List<String> fuzzyTerms = fuzzyCache.computeIfAbsent(
+                    originalTerm, fuzzyTermFinder::findSimilarTerms
+            );
+
+            searchTerms.addAll(fuzzyTerms.stream()
                             .filter(term -> !term.equals(originalTerm))
                             .toList()
             );
 
             for(String searchTerm : searchTerms) {
-                int df = invertedIndex.documentFrequency(searchTerm);
-                List<Posting> postings = invertedIndex.getPostings(searchTerm);
+                int df = compositeIndex.documentFrequency(searchTerm);
+                List<Posting> postings = compositeIndex.getPostings(searchTerm);
                 double fuzzyMultiplier = searchTerm.equals(originalTerm) ? 1.0 : 0.5;
 
                 for(Posting posting : postings) {
                     String documentId = posting.getDocumentId();
+                    if(tombstones.contains(documentId)) continue;
+
                     DocumentStats stats = documentStatisticsStore.get(documentId);
 
                     if(stats == null) continue;
@@ -132,7 +186,7 @@ public class SearchEngine {
         List<String> tokens = tokenizer.tokenize(text);
 
         for(int i=0; i < tokens.size(); i++) {
-            invertedIndex.addToken(tokens.get(i), documentId, field, i);
+            memoryIndex.addToken(tokens.get(i), documentId, field, i);
         }
 
         return tokens.size();
@@ -154,7 +208,7 @@ public class SearchEngine {
             boolean firstTerm = true;
 
             for (String term : terms) {
-                List<Posting> postings = invertedIndex.getPostings(term);
+                List<Posting> postings = compositeIndex.getPostings(term);
 
                 if(firstTerm) {
                     for (Posting posting : postings) {
@@ -181,6 +235,8 @@ public class SearchEngine {
             }
 
             for(var entry : postingsByDoc.entrySet()) {
+                if(tombstones.contains(entry.getKey())) continue;
+
                 if(phraseMatcher.matches(entry.getValue())) {
                     scores.merge(entry.getKey(), PHRASE_BOOST, Double::sum);
                     documentExplanations
@@ -197,5 +253,41 @@ public class SearchEngine {
                 }
             }
         }
+    }
+
+    private void indexDocument(Document document) {
+        int totalLength = 0;
+        totalLength += indexField(document.id(), document.title(), FieldType.TITLE);
+        totalLength += indexField(document.id(), document.content(), FieldType.CONTENT);
+        if(document.tags() != null && !document.tags().isEmpty())
+            for(String tags : document.tags())
+                totalLength += indexField(document.id(), tags, FieldType.TAG);
+
+        documentStatisticsStore.save(new DocumentStats(document.id(), totalLength));
+    }
+
+    private void flushSegment() {
+        if(!flushLock.tryLock()) return;
+
+        try {
+            String segmentId = "segment_" + System.currentTimeMillis();
+            segmentWriter.writeSegment(segmentId, memoryIndex.exportIndex());
+            Segment segment = segmentManager.createSegment(segmentId);
+            DiskSegmentIndex diskIndex = new DiskSegmentIndex(segmentReader.read(segment.getPath()));
+            compositeIndex.addSegment(diskIndex);
+
+            memoryIndex.clear();
+            buffer.clear();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            flushLock.unlock();
+        }
+    }
+
+    public void deleteDocument(String documentId) {
+        tombstones.add(documentId);
+        documentStore.remove(documentId);
+        documentStatisticsStore.remove(documentId);
     }
 }

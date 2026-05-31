@@ -1,18 +1,29 @@
 package com.manish.search.indexing;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class InvertedIndex {
+@RequiredArgsConstructor
+public class MemoryIndex implements SearchableIndex {
     private final Map<String, List<Posting>> index = new ConcurrentHashMap<>();
     @Getter
     private final Set<String> vocabulary = ConcurrentHashMap.newKeySet();
 
-    public void addToken(String token, String documentId, FieldType field, int position) {
+    public void clear() {
+        index.clear();
+    }
+
+    public void addToken(
+            String token,
+            String documentId,
+            FieldType field,
+            int position
+    ) {
         vocabulary.add(token);
 
         List<Posting> postings = index.computeIfAbsent(token, k -> new ArrayList<>());
@@ -30,15 +41,17 @@ public class InvertedIndex {
         posting.addPosition(position);
     }
 
+    @Override
     public List<Posting> getPostings(String token) {
         return index.getOrDefault(token, Collections.emptyList());
     }
 
-    public int documentFrequency(String term) {
-        return getPostings(term).size();
-    }
-
     public Map<String, List<Posting>> exportIndex() {
         return index;
+    }
+
+    @Override
+    public int documentFrequency(String term) {
+        return getPostings(term).size();
     }
 }

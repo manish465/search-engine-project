@@ -31,8 +31,9 @@ public class QueryParser {
             } else {
                 String token = matcher.group(3);
 
-                if(token.startsWith("-")) negativePhrases.add(token.substring(1));
-                else positiveTerms.add(token.replace("+",""));
+                if(token.startsWith("-")) negativeTerms.add(token.substring(1));
+                else if(token.startsWith("+")) positiveTerms.add(token.substring(1));
+                else positiveTerms.add(token);
             }
         }
 
