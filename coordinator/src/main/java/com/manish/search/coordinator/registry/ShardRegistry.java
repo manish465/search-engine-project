@@ -9,9 +9,9 @@ import java.util.List;
 public class ShardRegistry {
     public List<ShardNode> shards() {
         return List.of(
-                new ShardNode("localhost", 9001),
-                new ShardNode("localhost", 9002),
-                new ShardNode("localhost", 9003)
+                new ShardNode("shard1", 8080),
+                new ShardNode("shard2", 8080),
+                new ShardNode("shard3", 8080)
         );
     }
 }

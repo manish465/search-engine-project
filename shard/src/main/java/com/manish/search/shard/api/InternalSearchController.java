@@ -17,7 +17,7 @@ import java.util.List;
 public class InternalSearchController {
     private final LocalSearchEngine engine;
 
-    @PostMapping
+    @PostMapping("/search")
     public List<SearchResult> search(@RequestBody SearchRequest request) {
         return engine.search(request.query());
     }

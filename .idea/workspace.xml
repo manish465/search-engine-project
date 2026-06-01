@@ -5,48 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42818045-0512-4c90-aef3-c05e8aad248e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/.gitattributes" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/manish/search/common/dto/SearchRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/manish/search/common/dto/SearchResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/resources/application.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/.gitattributes" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/CoordinatorApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/api/SearchController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/model/ShardNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/registry/ShardRegistry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/service/SearchCoordinator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/src/main/resources/application.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coordinator/src/test/java/com/manish/search/coordinator/CoordinatorApplicationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/.gitattributes" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/ShardApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/api/InternalSearchController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/service/LocalSearchEngine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/src/main/resources/application.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shard/src/test/java/com/manish/search/shard/ShardApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/registry/ShardRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/registry/ShardRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/api/InternalSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/api/InternalSearchController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
