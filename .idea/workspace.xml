@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="42818045-0512-4c90-aef3-c05e8aad248e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/manish/search/common/dto/SearchRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/manish/search/common/dto/SearchResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/resources/application.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/CoordinatorApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/api/SearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/model/ShardNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/registry/ShardRegistry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/src/main/java/com/manish/search/coordinator/service/SearchCoordinator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/src/main/resources/application.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/coordinator/src/test/java/com/manish/search/coordinator/CoordinatorApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/ShardApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/api/InternalSearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/service/LocalSearchEngine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/resources/application.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/test/java/com/manish/search/shard/ShardApplicationTests.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Record" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3ER1seOJNMwDDXYWBVbwiKRn4oB" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.SearchApplication.executor": "Debug",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/DEVLOPMENT/Projects/search-engine/shard",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "MavenSettings"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "h2"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\DEVLOPMENT\Projects\search-engine\shard" />
+      <recent name="D:\DEVLOPMENT\Projects\search-engine\coordinator" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="42818045-0512-4c90-aef3-c05e8aad248e" name="Changes" comment="" />
+      <created>1780126775219</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1780126775219</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+    <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

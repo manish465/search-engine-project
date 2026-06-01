@@ -1,0 +1,31 @@
+version: '3.9'
+name: 'Search engine'
+
+services:
+  shard1:
+    build:
+      context: .
+      dockerfile: shard/Dockerfile
+    ports:
+      - "9001:8080"
+
+  shard2:
+    build:
+      context: .
+      dockerfile: shard/Dockerfile
+    ports:
+      - "9002:8080"
+
+  shard3:
+    build:
+      context: .
+      dockerfile: shard/Dockerfile
+    ports:
+      - "9003:8080"
+
+  coordinator:
+    build:
+      context: .
+      dockerfile: coordinator/Dockerfile
+    ports:
+      - "8080:8080"
