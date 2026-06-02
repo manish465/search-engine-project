@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42818045-0512-4c90-aef3-c05e8aad248e" name="Changes" comment="" />
+    <list default="true" id="42818045-0512-4c90-aef3-c05e8aad248e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/api/DocumentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/index/InvertedIndex.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/index/Posting.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/index/Tokenizer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/search/BM25Scorer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/search/DocumentStats.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/search/StatsStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/storage/DocumentStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/service/LocalSearchEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/shard/src/main/java/com/manish/search/shard/service/LocalSearchEngine.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,6 +55,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Maven.common [clean,install,common].executor": "Run",
+    "Maven.common [clean,install].executor": "Run",
+    "Maven.common [clean].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -54,7 +68,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/DEVLOPMENT/Projects/search-engine/shard",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "MavenSettings"
@@ -70,6 +84,13 @@
       <recent name="D:\DEVLOPMENT\Projects\search-engine\shard" />
       <recent name="D:\DEVLOPMENT\Projects\search-engine\coordinator" />
     </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean install common" />
+      <command value="mvn clean" />
+      <command value="mvn clean install" />
+    </option>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>

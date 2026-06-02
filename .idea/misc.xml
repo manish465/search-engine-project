@@ -7,6 +7,11 @@
         <option value="$PROJECT_DIR$/common/pom.xml" />
         <option value="$PROJECT_DIR$/shard/pom.xml" />
         <option value="$PROJECT_DIR$/coordinator/pom.xml" />
+        <option value="$PROJECT_DIR$/query-engine/pom.xml" />
+        <option value="$PROJECT_DIR$/cluster/pom.xml" />
+        <option value="$PROJECT_DIR$/storage-engine/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/vector-engine/pom.xml" />
       </list>
     </option>
   </component>
